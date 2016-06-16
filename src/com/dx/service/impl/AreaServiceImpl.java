@@ -20,4 +20,14 @@ public class AreaServiceImpl implements AreaService {
 		return areaDao.getProvice();
 	}
 
+	@Override
+	public List<Area> getCities(int pId) {
+		return areaDao.getCities(pId);
+	}
+
+	@Override
+	public List<Area> getAreas() {
+		return areaDao.getAreas();
+	}
+
 }
