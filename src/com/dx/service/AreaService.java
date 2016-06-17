@@ -2,14 +2,14 @@ package com.dx.service;
 
 import java.util.List;
 
-import com.dx.entity.Area;
+import com.dx.entity.AreaBean;
 
 public interface AreaService {
 
-	List<Area> getProvice();
+	List<AreaBean> getProvice();
 	
-	List<Area> getCities(int pId);
+	List<AreaBean> getCities(int pId);
 
-	List<Area> getAreas();
+	List<AreaBean> getAreas();
 	
 }

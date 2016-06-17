@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
-import com.dx.entity.Area;
+import com.dx.entity.AreaBean;
 
 
 public interface AreaDAO {
@@ -15,7 +15,7 @@ public interface AreaDAO {
 		@Result(id = true, column = "id", property = "id"),
 		@Result(column = "name", property = "name")
 	})
-	List<Area> getProvice();
+	List<AreaBean> getProvice();
 	
 
 	@Select("SELECT id,name FROM dict_city where pid=#{pId}")
@@ -23,7 +23,7 @@ public interface AreaDAO {
 		@Result(id = true, column = "id", property = "id"),
 		@Result(column = "name", property = "name")
 	})
-	List<Area> getCities(int pId);
+	List<AreaBean> getCities(int pId);
 	
 
 
@@ -32,5 +32,5 @@ public interface AreaDAO {
 		@Result(id = true, column = "id", property = "id"),
 		@Result(column = "name", property = "name")
 	})
-	List<Area> getAreas();
+	List<AreaBean> getAreas();
 }

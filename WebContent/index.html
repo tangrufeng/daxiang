@@ -3,6 +3,39 @@
 <html>
 <head>
 <title>Insert title here</title>
+<script type="text/javascript">
+function addOrder(){
+var postData = "{\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\":\"CNY\", \"takeDate\":\"2016-06-06\", \"cityId\":\"1\", \"areaId\":\"2\", \"sum\":\"33\", \"changer\":\"DD\", \"idType\":\"11\", \"idNo\":\"DD\", \"referenceID\":\"111\", \"moblieNo\":\"13700000000\", \"storeId\":\"1\", \"rate\":\"111\", \"status\":\"1\"}";
+	 
+	
+	/* postData = (function(obj){ // 转成post需要的字符串.
+	    var str = "";
+	 
+	    for(var prop in obj){
+	        str += prop + "=" + obj[prop] + "&"
+	    }
+	    return str;
+	})(postData);  */
+	
+
+    console.log(postData);
+	var xhr = new XMLHttpRequest();
+	 
+	xhr.open("POST", "wx/editOrder.do", true);
+	xhr.setRequestHeader("Content-type","application/json; charset=utf-8");
+	xhr.onreadystatechange = function(){
+	    var XMLHttpReq = xhr;
+	    if (XMLHttpReq.readyState == 4) {
+	        if (XMLHttpReq.status == 200) {
+	            var text = XMLHttpReq.responseText;
+	 
+	            console.log(text);
+	        }
+	    }
+	};
+	xhr.send(postData);
+}
+</script>
 </head>
 <body>
 <a href="wx/getPrivice.do">获取省</a>
@@ -12,5 +45,7 @@
 <a href="wx/getAreas.do">获取地理位置</a>
 <br><br>
 <a href="wx/getStoreList.do?buy=CNY&sell=USD&takeDate=2016-06-16&cityId=1&areaId=1">获取网点位置列表</a>
+<br><br>
+<a href="javascript:addOrder()">新增订单</a>
 </body>
 </html>
