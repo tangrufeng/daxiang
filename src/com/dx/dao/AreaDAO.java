@@ -10,20 +10,14 @@ import com.dx.entity.AreaBean;
 
 
 public interface AreaDAO {
-	@Select("SELECT id,name FROM dict_province")
-	@Results({
-		@Result(id = true, column = "id", property = "id"),
-		@Result(column = "name", property = "name")
-	})
-	List<AreaBean> getProvice();
 	
 
-	@Select("SELECT id,name FROM dict_city where pid=#{pId}")
+	@Select("SELECT id,name FROM dict_city where status=1")
 	@Results({
 		@Result(id = true, column = "id", property = "id"),
 		@Result(column = "name", property = "name")
 	})
-	List<AreaBean> getCities(int pId);
+	List<AreaBean> getCities();
 	
 
 

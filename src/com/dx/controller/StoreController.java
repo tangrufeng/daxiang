@@ -13,7 +13,7 @@ import com.dx.entity.StoreBean;
 import com.dx.service.StoreService;
 
 @Controller
-public class StoreController {
+public class StoreController extends BaseController{
 
 	@Autowired
 	StoreService storeService;

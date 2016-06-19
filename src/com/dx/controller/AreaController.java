@@ -14,26 +14,17 @@ import com.dx.entity.ResultListBean;
 import com.dx.service.AreaService;
 
 @Controller
-public class AreaController {
+public class AreaController extends BaseController{
 
 	@Autowired
 	AreaService areaService;
 
-	@RequestMapping(value = "/wx/getPrivice.do")
-	@ResponseBody
-	public ResultBean getProvice(){
-		ResultListBean bean =new ResultListBean();
-		bean.getList().addAll(areaService.getProvice());
-		bean.setCnt(bean.getList().size());
-		return bean;
-	}
-	
 
 	@RequestMapping(value = "/wx/getCities.do")
 	@ResponseBody
-	public ResultListBean getCities(@RequestParam("pId") int id){
+	public ResultListBean getCities(){
 		ResultListBean bean =new ResultListBean();
-		bean.getList().addAll(areaService.getCities(id));
+		bean.getList().addAll(areaService.getCities());
 		bean.setCnt(bean.getList().size());
 		return bean;
 	}

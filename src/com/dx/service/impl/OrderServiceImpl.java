@@ -7,6 +7,9 @@ import com.dx.dao.OrderDAO;
 import com.dx.entity.OrderBean;
 import com.dx.service.OrderService;
 
+import java.util.List;
+import java.util.Map;
+
 @Service("orderService")
 public class OrderServiceImpl implements OrderService{
 
@@ -25,10 +28,14 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public int updateStatus() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateStatus(int orderId,String openId,int status) {
+		return orderDAO.updateStatus(orderId,openId,status);
 	}
 
-	
+	@Override
+	public List<Map<String, String>> getOrderByUser(String openId) {
+		return orderDAO.getOrderByUser(openId);
+	}
+
+
 }

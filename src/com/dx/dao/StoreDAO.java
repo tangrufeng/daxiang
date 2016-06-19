@@ -13,7 +13,7 @@ public interface StoreDAO {
 
 	@Select("select  s.id, s.s_id, s.name, s.address,"
 			+ "s.opentime, s.max, s.min, sr.rate, s.opentime,"
-			+ "sp.name as spname, sp.fullname from  t_stores s,"
+			+ "sp.name as spname, sp.fullname,s.ahead,dc.name as city  from  t_stores s,"
 			+ "t_store_rate sr, dict_city dc, t_suppliers sp"
 			+ " where  s.city = #{city} and s.area = #{area}  and sr.buy = #{buy} "
 			+ "and sr.sell = #{sell}  and s.ahead >= datediff(#{takeDate}, "
@@ -27,7 +27,8 @@ public interface StoreDAO {
 			@Result(column = "max", property = "max"),
 			@Result(column = "min", property = "min"),
 			@Result(column = "rate", property = "rate"),
-			@Result(column = "opentime", property = "name") })
+			@Result(column = "city", property = "city"),
+			@Result(column = "ahead", property = "ahead")})
 	public List<StoreBean> getStores(@Param("city") String city,
 			@Param("area") String area, @Param("buy") String buy,
 			@Param("sell") String sell, @Param("takeDate") String takeDate);

@@ -1,7 +1,10 @@
 package com.dx.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderBean implements Serializable{
 
 	private int id=0;

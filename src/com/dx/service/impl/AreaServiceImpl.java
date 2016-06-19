@@ -15,14 +15,10 @@ public class AreaServiceImpl implements AreaService {
 	@Autowired
 	AreaDAO areaDao;
 	
-	@Override
-	public List<AreaBean> getProvice() {
-		return areaDao.getProvice();
-	}
 
 	@Override
-	public List<AreaBean> getCities(int pId) {
-		return areaDao.getCities(pId);
+	public List<AreaBean> getCities() {
+		return areaDao.getCities();
 	}
 
 	@Override
