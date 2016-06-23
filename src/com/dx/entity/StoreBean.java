@@ -12,34 +12,15 @@ public class StoreBean {
 	private String linkman  ="";
 	private String phone    ="";
 	private String city     ="";
-	private String province ="";
 	private String area     ="";
 	private String ahead    ="";
 	private String rate ="";
+	private String createTime="";
+	private String updateTiem="";
+	private String status="";
 
 	public StoreBean(){
 
-	}
-
-	@Override
-	public String toString() {
-		return "StoreBean{" +
-				"id='" + id + '\'' +
-				", sid='" + sid + '\'' +
-				", supplier='" + supplier + '\'' +
-				", name='" + name + '\'' +
-				", address='" + address + '\'' +
-				", openingHours='" + openingHours + '\'' +
-				", max='" + max + '\'' +
-				", min='" + min + '\'' +
-				", linkman='" + linkman + '\'' +
-				", phone='" + phone + '\'' +
-				", city='" + city + '\'' +
-				", province='" + province + '\'' +
-				", area='" + area + '\'' +
-				", ahead='" + ahead + '\'' +
-				", rate='" + rate + '\'' +
-				'}';
 	}
 
 	public String getId() {
@@ -106,6 +87,53 @@ public class StoreBean {
 		this.min = min;
 	}
 
+	@Override
+	public String toString() {
+		return "StoreBean{" +
+				"id='" + id + '\'' +
+				", sid='" + sid + '\'' +
+				", supplier='" + supplier + '\'' +
+				", name='" + name + '\'' +
+				", address='" + address + '\'' +
+				", openingHours='" + openingHours + '\'' +
+				", max='" + max + '\'' +
+				", min='" + min + '\'' +
+				", linkman='" + linkman + '\'' +
+				", phone='" + phone + '\'' +
+				", city='" + city + '\'' +
+				", area='" + area + '\'' +
+				", ahead='" + ahead + '\'' +
+				", rate='" + rate + '\'' +
+				", createTime='" + createTime + '\'' +
+				", updateTiem='" + updateTiem + '\'' +
+				", status='" + status + '\'' +
+				'}';
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getUpdateTiem() {
+		return updateTiem;
+	}
+
+	public void setUpdateTiem(String updateTiem) {
+		this.updateTiem = updateTiem;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getLinkman() {
 		return linkman;
 	}
@@ -130,13 +158,6 @@ public class StoreBean {
 		this.city = city;
 	}
 
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
 
 	public String getArea() {
 		return area;

@@ -49,7 +49,7 @@ CREATE TABLE `t_order` (
   `IDType` varchar(45) DEFAULT NULL,
   `IDNO` varchar(45) DEFAULT NULL,
   `referenceID` varchar(45) DEFAULT NULL,
-  `moblieNO` varchar(45) DEFAULT NULL,
+  `moblieNo` varchar(45) DEFAULT NULL,
   `storeId` int(11) DEFAULT NULL,
   `rate` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT NULL COMMENT '1--待审核 2--已受理 3--拒绝 4--取消 5--完成',

@@ -16,4 +16,6 @@ public interface OrderService {
 	int updateStatus(int orderId,String openId,int status);
 
 	List<Map<String,String>> getOrderByUser(String openId);
+
+	List<Map<String,String>> queryOrderByPage(Map<String,String> params);
 }

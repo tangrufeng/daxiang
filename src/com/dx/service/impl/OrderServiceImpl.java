@@ -37,5 +37,10 @@ public class OrderServiceImpl implements OrderService{
 		return orderDAO.getOrderByUser(openId);
 	}
 
+	@Override
+	public List<Map<String, String>> queryOrderByPage(Map<String,String> params) {
+		return orderDAO.queryOrderByPage(params);
+	}
+
 
 }

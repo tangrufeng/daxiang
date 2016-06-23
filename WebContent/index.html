@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 function addOrder(){
-var postData = "{\"a\":\"aaa\",\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\":\"CNY\", \"takeDate\":\"2016-06-06\", \"cityId\":\"1\", \"areaId\":\"2\", \"sum\":\"33\", \"changer\":\"DD\", \"idType\":\"11\", \"idNo\":\"DD\", \"referenceID\":\"111\", \"moblieNo\":\"13700000000\", \"storeId\":\"1\", \"rate\":\"111\", \"status\":\"1\"}";
+var postData = "{\"a\":\"aaa\",\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\":\"CNY\", \"takeDate\":\"2016-06-06\", \"cityId\":\"1\", \"areaId\":\"2\", \"sum\":\"33\", \"changer\":\"张三\", \"idType\":\"11\", \"idNo\":\"DD\", \"referenceID\":\"111\", \"moblieNo\":\"13700000000\", \"storeId\":\"1\", \"rate\":\"111\", \"status\":\"1\"}";
 
     console.log(postData);
 	var xhr = new XMLHttpRequest();
@@ -17,7 +17,7 @@ var postData = "{\"a\":\"aaa\",\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\
 	    if (XMLHttpReq.readyState == 4) {
 	        if (XMLHttpReq.status == 200) {
 	            var text = XMLHttpReq.responseText;
-	 
+	 			alert(text);
 	            console.log(text);
 	        }
 	    }
@@ -27,6 +27,7 @@ var postData = "{\"a\":\"aaa\",\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\
 </script>
 </head>
 <body>
+<div style="font-size: larger;color: red">微信端接口</div>
 <a href="wx/getCities.do">获取市</a>
 <br><br>
 <a href="wx/getAreas.do">获取地理位置</a>
@@ -41,8 +42,27 @@ var postData = "{\"a\":\"aaa\",\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\
 <br><br>
 <a href="wx/cancelOrder.do?openId=xxxxxxxx&orderId=1">取消订单</a>
 <br><br>
-<a href="wx/sendValiCode.do?openId=xxxx&mobileNO=xxxxx">发送短信验证码</a>
+<a href="wx/sendValiCode.do?openId=xxxx&mobileNo=xxxxx">发送短信验证码</a>
 <br><br>
-<a href="wx/valiMobile.do?openId=xxxx&mobileNO=xxxxx&valiCode=xxx">验证短信验证码</a>
+<a href="wx/valiMobile.do?openId=xxxx&mobileNo=xxxxx&valiCode=xxx">验证短信验证码</a>
+<br><br><br><br>
+<div style="font-size: larger;color: red">供应商端接口</div>
+<a href="sp/queryOrderByPage.do?openId=xxxxxxxxx&buy=CNY&sell=USD&page=1&pageSize=2">分页查询订单</a>
+<br><br>
+<a href="sp/reviewedOrder.do?openId=xxxxxxxx&orderId=1&status=2">订单审核接口。通过:status=2,拒绝:status=3</a>
+<br><br>
+<a href="sp/getStoreList.do">获取门店列表</a>
+<br><br><br><br>
+<div style="font-size: larger;color: red">后台端接口</div>
+<a href="mp/login.do?userName=test&password=aaaa">登录接口</a>
+<br><br>
+<a href="mp/resetPWD.do?id=1&oldPassword=aaaa&newPassword=bbbb">重置密码接口</a>
+<br><br>
+<a href="mp/getSupplerList.do">获取供应商列表</a>
+<br><br>
+<a href="mp/getStoreList.do?sid=1">获取门店列表</a>
+
+
+
 </body>
 </html>

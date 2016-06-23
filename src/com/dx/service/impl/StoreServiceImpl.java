@@ -1,6 +1,7 @@
 package com.dx.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,19 @@ public class StoreServiceImpl implements StoreService {
 			String sell, String takeDate) {
 		return storeDAO.getStores(city, area, buy, sell, takeDate);
 	}
-	
 
+	@Override
+	public int addStore(StoreBean bean) {
+		return storeDAO.addStore(bean);
+	}
+
+	@Override
+	public List<Map<String, String>> getStoreList(int sid) {
+		return storeDAO.getStoreList(sid);
+	}
+
+	@Override
+	public int isExistStore(String id, String name, String supplerId) {
+		return storeDAO.isExistStore(id,name,supplerId);
+	}
 }

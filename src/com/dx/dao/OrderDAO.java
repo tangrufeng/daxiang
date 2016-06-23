@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.*;
 
 import com.dx.entity.OrderBean;
 import org.apache.ibatis.jdbc.SQL;
-import org.springframework.stereotype.Component;
+import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.Map;
 
 public interface OrderDAO {
 
-	@Insert("INSERT INTO `t_order` ( `openId`, `buy`, `sell`, `takeDate`, `cityId`,  `sum`, `changer`, `IDType`, `IDNO`, `referenceID`, `moblieNO`, `storeId`, `rate`, `status`,createtime,updatetime) "
-			+ "VALUES ( #{openId}, #{buy}, #{sell}, #{takeDate}, #{cityId}, #{sum}, #{changer}, #{idType}, #{idNo}, #{referenceID}, #{moblieNo}, #{storeId}, #{rate}, 1,now(),now());")
+	@Insert("INSERT INTO `t_order` ( `openId`, `buy`, `sell`, `takeDate`, `cityId`,  `sum`, `changer`, `IDType`, `IDNO`, `referenceID`, `mobileNO`, `storeId`, `rate`, `status`,createtime,updatetime) "
+			+ "VALUES ( #{openId}, #{buy}, #{sell}, #{takeDate}, #{cityId}, #{sum}, #{changer}, #{idType}, #{idNo}, #{referenceID}, #{moblieNo}, #{storeId}, #{rate}, 1,DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'));")
 	int addOrder(OrderBean order);
 
 	@UpdateProvider(type = OrderSQL.class,method = "update")
 	int editOrder(OrderBean order);
 
-	@Select("SELECT  o.id, o.buy, o.sell, o.takeDate, o.cityId, o.sum, o.changer, o.IDType, o.IDNO, o.referenceID, o.moblieNO, o.status orderStatus, s.name, s.id storeId, s.max, s.min, s.address, s.opentime openningHours,a.name as area,c.name as city " +
+	@Select("SELECT  o.id, o.buy, o.sell,o.rate, o.takeDate, o.cityId, o.sum, o.changer, o.idType, o.idNo, o.referenceID, o.mobileNo, o.status orderStatus, s.name, s.id storeId, s.max, s.min, s.address, s.opentime openingHours,a.name as area,c.name as city,DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') createTime " +
 			"FROM t_order o, t_stores s, t_areas a, dict_city c " +
 			"WHERE o.storeId = s.id and s.city=c.id and s.area=a.id and openId=#{openId}")
 	List<Map<String,String>> getOrderByUser(String openId);
@@ -29,54 +29,79 @@ public interface OrderDAO {
 	int updateStatus(@Param("orderId") int orderId,@Param("openId") String openId,@Param("status") int status);
 
 	@SelectProvider(type=OrderSQL.class,method = "query")
-	List<Map<String,String>> queryOrderByPage(OrderBean order,int page,int pageSize);
+	List<Map<String,String>> queryOrderByPage(Map<String,String> map);
+
 
 	public class OrderSQL {
 
-		public String query(final OrderBean order,int page,int pageSize){
-
-			return new SQL(){
+		public String query(final Map params){
+			SQL sql= new SQL(){
 				{
-					SELECT("SELECT  id, openId, buy, sell, takeDate, cityId, sum, changer, IDType, IDNO, referenceID, moblieNO, storeId, rate, status, createTime, updateTime, st.name as store, c.name as city, sp.name suppler, ch.name");
-					FROM("t_order o, dict_city c, t_suppliers sp, t_channels ch, t_stores st ");
-					WHERE("o.cityId=c.id and o.storeId=st.id and st.s_id=sp.id and ch.code=o.referenceID ");
+					SELECT("o.id, openId, buy, sell, takeDate, cityId, sum, changer, idType, idNo, ifnull(referenceID,'') referenceID, ifnull(mobileNo,'') mobileNo, storeId, rate, o.status, DATE_FORMAT(o.createTime,'%Y-%m-%d%H:%i:%s') createTime, DATE_FORMAT(o.updateTime,'%Y-%m-%d%H:%i:%s') updateTime, st.name as store, c.name as city, sp.name suppler, ifnull(ch.name,'') as channel");
+					FROM(" t_order o ");
+                    LEFT_OUTER_JOIN("dict_city c ON o.cityId = c.id");
+                    LEFT_OUTER_JOIN("t_channels ch ON ch.code = o.referenceID");
+                    LEFT_OUTER_JOIN("t_stores st ON o.storeId = st.id");
+                    LEFT_OUTER_JOIN("t_suppliers sp ON st.s_id = sp.id");
 
 					//通过条件 判断是否需要更新该字段
-					if (!StringUtils.isEmpty(order.getBuy())){
+					if (params.containsKey("buy")){
 						WHERE("buy = #{buy}");
 					}
-					if (!StringUtils.isEmpty(order.getSell())){
+					if (params.containsKey("sell")){
 						WHERE("sell = #{sell}");
 					}
-					if (!StringUtils.isEmpty(order.getTakeDate())){
+					if (params.containsKey("takeDate")){
 						WHERE("takeDate = #{takeDate}");
 					}
-					if (!StringUtils.isEmpty(order.getCityId())){
+					if (params.containsKey("cityId")){
 						WHERE("cityId = #{cityId}");
 					}
-					if (!StringUtils.isEmpty(order.getChanger())){
+					if (params.containsKey("changer")){
 						WHERE("changer = '%#{changer}%'");
 					}
-					if (!StringUtils.isEmpty(order.getIdNo())){
+					if (params.containsKey("idNo")){
 						WHERE("IDNO like '%#{idNo}%'");
 					}
-					if (!StringUtils.isEmpty(order.getReferenceID())){
+					if (params.containsKey("referenceID")){
 						WHERE("referenceID = #{referenceID}");
 					}
-					if (!StringUtils.isEmpty(order.getMoblieNo())){
-						WHERE("moblieNO = #{moblieNO}");
+					if (params.containsKey("moblieNo")){
+						WHERE("moblieNO = #{moblieNo}");
 					}
-					if (!StringUtils.isEmpty(order.getStoreId())){
+					if (params.containsKey("storeId")){
 						WHERE("storeId = #{storeId}");
 					}
-					if (!StringUtils.isEmpty(order.getCreateTime())){
+					if (params.containsKey("createTime")){
 						WHERE("DATE_FORMAT(createTime,'%Y-%m-%d') = #{createTime}");
 					}
-					int start=(page-1)*pageSize;
-					WHERE("LIMIT ");
+					if(params.containsKey("status")){
+						WHERE("o.status = #{status}");
+					}
+					if(params.containsKey("supplierId")){
+						WHERE("sp.id = #{supplierId}");
+					}
+					if(params.containsKey("orderId")){
+						WHERE("o.id = #{orderId}");
+					}
 
+                    ORDER_BY(" o.createTime desc");
 				}
-			}.toString();
+
+			};
+
+			int page=1;
+			int pageSize=10;
+			try {
+				page = Integer.parseInt(String.valueOf(params.get("page")));
+				pageSize = Integer.parseInt(String.valueOf(params.get("pageSize")));
+			}catch (Exception e){
+
+			}
+			int start=(page-1)*pageSize;
+			StringBuilder sb=new StringBuilder(sql.toString());
+			sb.append(" LIMIT "+start+","+pageSize);
+			return sb.toString();
 		}
 
 		public String update(final OrderBean order) {
@@ -118,7 +143,7 @@ public interface OrderDAO {
 						if (!StringUtils.isEmpty(order.getStoreId())){
 							SET("storeId = #{storeId}");
 						}
-							SET("updateTime = now()");
+							SET("updateTime = DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s') ");
 
 						WHERE("id = #{id}");
 

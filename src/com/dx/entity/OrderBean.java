@@ -7,7 +7,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderBean implements Serializable{
 
-	private int id=0;
+	private String id="";
 	
 	private String openId="";
 	
@@ -31,7 +31,7 @@ public class OrderBean implements Serializable{
 	
 	private String referenceID ="";
 	
-	private String moblieNo="";
+	private String moblieNo ="";
 	
 	private int status=0;
 	
@@ -49,18 +49,13 @@ public class OrderBean implements Serializable{
 	}
 
 
-
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-
-
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-
-
 
 	public String getOpenId() {
 		return openId;
