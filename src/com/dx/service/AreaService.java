@@ -1,8 +1,8 @@
 package com.dx.service;
 
-import java.util.List;
-
 import com.dx.entity.AreaBean;
+
+import java.util.List;
 
 public interface AreaService {
 

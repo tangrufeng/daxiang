@@ -1,12 +1,10 @@
 package com.dx.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import com.dx.entity.SupplerBean;
+import com.dx.entity.StoreBean;
 import org.apache.ibatis.annotations.*;
 
-import com.dx.entity.StoreBean;
+import java.util.List;
+import java.util.Map;
 
 public interface StoreDAO {
 
@@ -22,7 +20,7 @@ public interface StoreDAO {
 			@Result(column = "name", property = "name"),
 			@Result(column = "spname", property = "supplier"),
 			@Result(column = "address", property = "address"),
-			@Result(column = "opentime", property = "openingHours"),
+			@Result(column = "opentime", property = "opentime"),
 			@Result(column = "max", property = "max"),
 			@Result(column = "min", property = "min"),
 			@Result(column = "rate", property = "rate"),
@@ -33,13 +31,13 @@ public interface StoreDAO {
 			@Param("sell") String sell, @Param("takeDate") String takeDate);
 
 
-	@Insert("INSERT INTO t_stores (s_id,status,createtime,updatetime,name,address,opentime,max,min,linkman,phone,city,area,ahead) VALUES (#{s_id}, #{status}, DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),#{name},#{address},#{opentime},#{max},#{min},#{linkman},#{phone},#{city},#{area},#{ahead})")
+	@Insert("INSERT INTO t_stores (s_id,status,createtime,updatetime,name,address,opentime,max,min,linkman,phone,city,area,ahead) VALUES (#{sid}, 1, DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),#{name},#{address},#{opentime},#{max},#{min},#{linkman},#{phone},#{city},#{area},#{ahead})")
 	public int addStore(StoreBean bean);
 
 //	@Update("update t_suppliers set name=#{name},fullname=#{fullname},account=#{account},updatetime=DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s') where id=#{id} ")
 //	public int editStore(SupplerBean bean);
 
-	@Select("select LPAD(id,5,0) as id,s_id,status,createtime,updatetime,name,address,opentime,max,min,linkman,phone,city,area,ahead from t_stores where s_id=#{sid} order by createtime")
+	@Select("select LPAD(id,5,0) as id,s_id sid,status,createtime,updatetime,name,address,opentime,max,min,linkman,phone,city,area,ahead from t_stores where s_id=#{sid} order by createtime")
 	public List<Map<String,String>> getStoreList(int sid);
 
 

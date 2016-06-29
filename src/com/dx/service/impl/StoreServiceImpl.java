@@ -1,17 +1,13 @@
 package com.dx.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
+import com.dx.dao.StoreDAO;
+import com.dx.entity.StoreBean;
+import com.dx.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dx.dao.AreaDAO;
-import com.dx.dao.StoreDAO;
-import com.dx.entity.AreaBean;
-import com.dx.entity.StoreBean;
-import com.dx.service.AreaService;
-import com.dx.service.StoreService;
+import java.util.List;
+import java.util.Map;
 
 @Service("storeService")
 public class StoreServiceImpl implements StoreService {

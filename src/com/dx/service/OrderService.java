@@ -1,7 +1,5 @@
 package com.dx.service;
 
-import org.apache.ibatis.annotations.Insert;
-
 import com.dx.entity.OrderBean;
 
 import java.util.List;
@@ -18,4 +16,6 @@ public interface OrderService {
 	List<Map<String,String>> getOrderByUser(String openId);
 
 	List<Map<String,String>> queryOrderByPage(Map<String,String> params);
+
+	int queryCount(Map<String,String> params);
 }

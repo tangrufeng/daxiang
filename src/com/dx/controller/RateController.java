@@ -2,23 +2,18 @@ package com.dx.controller;
 
 import com.dx.common.Common;
 import com.dx.entity.ResultBean;
-import com.dx.entity.StoreBean;
 import com.dx.entity.StoreRateBean;
 import com.dx.entity.SupplerBean;
 import com.dx.service.StoreRateService;
 import com.dx.service.StoreService;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.eval.StringValueEval;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
@@ -26,10 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,11 +70,9 @@ public class RateController {
     public void downloadTemplat(HttpServletRequest request, HttpServletResponse response) {
         SupplerBean bean = (SupplerBean) request.getSession().getAttribute(Common.SUPPLER_SESSIOIN_BEAN);
         if (bean == null) {
-//            rb.setErrCode(1);
-//            rb.setErrMsg("请先登录");
-            bean = new SupplerBean();
-            bean.setId("1");
-            bean.setName("测试渠道商");
+//            rb.setErrCode(Common.ERR_CODE_NOLOGIN_MP);
+//            rb.setErrMsg(Common.ERR_MSG_NOLOGIN);
+            return;
         }
 
         List<Map<String, String>> stores = storeService.getStoreList(Integer.parseInt(bean.getId()));
@@ -149,15 +140,13 @@ public class RateController {
 
     @RequestMapping("/sp/uploadRate")
     @ResponseBody
-    public ResultBean uploadRateFile(@RequestParam("uploadfile") CommonsMultipartFile upload, HttpServletRequest request) {
+    public ResultBean uploadRateFile(@RequestParam("file") CommonsMultipartFile upload, HttpServletRequest request) {
 
         ResultBean rb = new ResultBean();
         SupplerBean bean = (SupplerBean) request.getSession().getAttribute(Common.SUPPLER_SESSIOIN_BEAN);
         if (bean == null) {
-//            rb.setErrCode(1);
-//            rb.setErrMsg("请先登录");
-            bean = new SupplerBean();
-            bean.setId("1");
+            rb.setErrCode(Common.ERR_CODE_NOLOGIN_SP);
+            rb.setErrMsg(Common.ERR_MSG_NOLOGIN);
         }
 
         if (upload == null || upload.isEmpty()) {
@@ -167,8 +156,21 @@ public class RateController {
         }
         System.out.println("content-type====>" + upload.getFileItem().getContentType());
 
+
+            XSSFWorkbook excel =null;
+
         try {
-            XSSFWorkbook excel = new XSSFWorkbook(upload.getInputStream());
+            excel=new XSSFWorkbook(upload.getInputStream());
+        }catch (Exception e){
+            logger.error("上传文件名称===>"+upload.getOriginalFilename()+ "  ====>"+upload.getContentType(),e);
+        }
+        if(excel==null){
+            rb.setErrCode(1);
+            rb.setErrMsg("大神,别啥都上传好不好,我要Excel,麻烦来点诚意!");
+            return rb;
+        }
+
+        try{
             XSSFSheet sheet = excel.getSheet("网点及汇率报价");
             if (sheet == null) {
                 sheet = excel.getSheetAt(1);
@@ -182,8 +184,12 @@ public class RateController {
             List<StoreRateBean> rates = new ArrayList<StoreRateBean>();
             for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 XSSFRow row1 = sheet.getRow(rowIndex);
-                String storeId = row1.getCell(0).getStringCellValue();
-                String storeName = row1.getCell(1).getStringCellValue();
+
+                String storeId = getCellValue(row1.getCell(0));
+                String storeName = getCellValue(row1.getCell(1));
+                if(StringUtils.isEmpty(storeId) || StringUtils.isEmpty(storeName)){
+                    continue;
+                }
                 if (storeService.isExistStore(storeId, storeName, bean.getId()) == 0) {
                     rb.setErrCode(1);
                     rb.setErrMsg("系统中没有找到编号为【" + storeId + "】,名称为【" + storeName + "】的门店信息,上传失败,请仔细检查并重新上传汇率文件");
@@ -191,31 +197,37 @@ public class RateController {
                 }
 
                 for (int i = 0; i < CURRENCY.length; i++) {
-                    double rate = row1.getCell((i * 2) + 2).getNumericCellValue();
-                    if (rate == 0.0) {
-                        continue;
+                    String strRate=getCellValue(row1.getCell((i * 2) + 2));
+                    double rate = Double.parseDouble(StringUtils.isEmpty(strRate)?"0":strRate);
+                    if (rate != 0.0) {
+                        StoreRateBean rateBean = new StoreRateBean();
+                        rateBean.setsId(storeId);
+                        rateBean.setsName(storeName);
+                        rateBean.setBuy("CNY");
+                        rateBean.setSell(CURRENCY[i]);
+                        rateBean.setRate(String.valueOf(new BigDecimal(rate).setScale(4, BigDecimal.ROUND_DOWN)));
+                        rateBean.setSupplierId(String.valueOf(bean.getId()));
+                        rates.add(rateBean);
                     }
-                    StoreRateBean rateBean = new StoreRateBean();
-                    rateBean.setsId(storeId);
-                    rateBean.setsName(storeName);
-                    rateBean.setBuy("CNY");
-                    rateBean.setSell(CURRENCY[i]);
-                    rateBean.setRate(String.valueOf(new BigDecimal(rate).setScale(4, BigDecimal.ROUND_DOWN)));
-                    rateBean.setSupplierId(String.valueOf(bean.getId()));
-                    rates.add(rateBean);
-                    rate = row1.getCell((i * 2) + 3).getNumericCellValue();
-                    if (rate == 0.0) {
-                        continue;
+
+                    strRate=getCellValue(row1.getCell((i * 2) + 3));
+                    rate = Double.parseDouble(StringUtils.isEmpty(strRate)?"0":strRate);
+                    if (rate != 0.0) {
+                        StoreRateBean rateBean = new StoreRateBean();
+                        rateBean.setsId(storeId);
+                        rateBean.setsName(storeName);
+                        rateBean.setBuy(CURRENCY[i]);
+                        rateBean.setSell("CNY");
+                        rateBean.setRate(String.valueOf(new BigDecimal(rate).setScale(4, BigDecimal.ROUND_DOWN)));
+                        rateBean.setSupplierId(String.valueOf(bean.getId()));
+                        rates.add(rateBean);
                     }
-                    rateBean = new StoreRateBean();
-                    rateBean.setsId(storeId);
-                    rateBean.setsName(storeName);
-                    rateBean.setBuy(CURRENCY[i]);
-                    rateBean.setSell("CNY");
-                    rateBean.setRate(String.valueOf(new BigDecimal(rate).setScale(4, BigDecimal.ROUND_DOWN)));
-                    rateBean.setSupplierId(String.valueOf(bean.getId()));
-                    rates.add(rateBean);
                 }
+            }
+            if(rates.size()==0){
+                rb.setErrCode(1);
+                rb.setErrMsg("大神,你上传了个空的东东,来点诚意好不好");
+                return rb;
             }
             if (!storeRateService.addRate(Integer.parseInt(bean.getId()), rates)) {
                 rb.setErrCode(1);
@@ -232,5 +244,15 @@ public class RateController {
 
         return rb;
 
+    }
+
+
+    private String getCellValue(XSSFCell cell){
+        switch (cell.getCellType()){
+            case XSSFCell.CELL_TYPE_NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            default:
+                return String.valueOf(cell.getStringCellValue());
+        }
     }
 }

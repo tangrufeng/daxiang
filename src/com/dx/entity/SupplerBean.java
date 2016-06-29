@@ -1,12 +1,16 @@
 package com.dx.entity;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
 
 /**
  * Created by Tom on 16/6/22.
  */
-@JsonIgnoreProperties
-public class SupplerBean {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Component
+public class SupplerBean  implements Serializable {
 
     private String id = "";
     private String name = "";
@@ -16,6 +20,9 @@ public class SupplerBean {
     private String fullname = "";
     private String account="";
     private String password="";
+
+    public SupplerBean() {
+    }
 
     public String getPassword() {
         return password;

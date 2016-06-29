@@ -1,11 +1,10 @@
 package com.dx.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.dx.dao.OrderDAO;
 import com.dx.entity.OrderBean;
 import com.dx.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,11 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<Map<String, String>> queryOrderByPage(Map<String,String> params) {
 		return orderDAO.queryOrderByPage(params);
+	}
+
+	@Override
+	public int queryCount(Map<String, String> params) {
+		return orderDAO.queryCount(params);
 	}
 
 

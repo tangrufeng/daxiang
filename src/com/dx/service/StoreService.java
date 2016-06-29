@@ -1,11 +1,9 @@
 package com.dx.service;
 
+import com.dx.entity.StoreBean;
+
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.*;
-
-import com.dx.entity.StoreBean;
 
 public interface StoreService {
 

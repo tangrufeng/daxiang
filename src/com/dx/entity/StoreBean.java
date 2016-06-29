@@ -6,7 +6,7 @@ public class StoreBean {
 	private String supplier ="";
 	private String name     ="";
 	private String address  ="";
-	private String openingHours ="";
+	private String opentime ="";
 	private String max      ="";
 	private String min      ="";
 	private String linkman  ="";
@@ -16,7 +16,7 @@ public class StoreBean {
 	private String ahead    ="";
 	private String rate ="";
 	private String createTime="";
-	private String updateTiem="";
+	private String updateTime ="";
 	private String status="";
 
 	public StoreBean(){
@@ -63,12 +63,12 @@ public class StoreBean {
 		this.address = address;
 	}
 
-	public String getOpeningHours() {
-		return openingHours;
+	public String getOpentime() {
+		return opentime;
 	}
 
-	public void setOpeningHours(String openingHours) {
-		this.openingHours = openingHours;
+	public void setOpentime(String opentime) {
+		this.opentime = opentime;
 	}
 
 	public String getMax() {
@@ -95,7 +95,7 @@ public class StoreBean {
 				", supplier='" + supplier + '\'' +
 				", name='" + name + '\'' +
 				", address='" + address + '\'' +
-				", openingHours='" + openingHours + '\'' +
+				", opentime='" + opentime + '\'' +
 				", max='" + max + '\'' +
 				", min='" + min + '\'' +
 				", linkman='" + linkman + '\'' +
@@ -105,7 +105,7 @@ public class StoreBean {
 				", ahead='" + ahead + '\'' +
 				", rate='" + rate + '\'' +
 				", createTime='" + createTime + '\'' +
-				", updateTiem='" + updateTiem + '\'' +
+				", updateTime='" + updateTime + '\'' +
 				", status='" + status + '\'' +
 				'}';
 	}
@@ -118,12 +118,12 @@ public class StoreBean {
 		this.createTime = createTime;
 	}
 
-	public String getUpdateTiem() {
-		return updateTiem;
+	public String getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setUpdateTiem(String updateTiem) {
-		this.updateTiem = updateTiem;
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public String getStatus() {

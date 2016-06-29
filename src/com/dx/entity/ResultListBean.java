@@ -6,7 +6,7 @@ import java.util.List;
 public class ResultListBean extends ResultBean{
 	
 	private int cnt=0;
-	
+
 	private List<Object> list=new ArrayList<Object>();
 
 	public int getCnt() {

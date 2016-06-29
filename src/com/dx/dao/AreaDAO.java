@@ -1,12 +1,11 @@
 package com.dx.dao;
 
-import java.util.List;
-
+import com.dx.entity.AreaBean;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
-import com.dx.entity.AreaBean;
+import java.util.List;
 
 
 public interface AreaDAO {

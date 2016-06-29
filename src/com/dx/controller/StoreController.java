@@ -1,23 +1,19 @@
 package com.dx.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import com.dx.common.Common;
-import com.dx.entity.ResultBean;
-import com.dx.entity.SupplerBean;
+import com.dx.entity.*;
+import com.dx.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.dx.entity.ResultListBean;
-import com.dx.entity.StoreBean;
-import com.dx.service.StoreService;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class StoreController extends BaseController{
@@ -41,37 +37,49 @@ public class StoreController extends BaseController{
 
 	@RequestMapping("mp/getStoreList")
 	@ResponseBody
-	public ResultListBean getStoreList(@RequestParam("sid") int sid){
-		ResultListBean rlb=new ResultListBean();
+	public ResultListBean getStoreList(@RequestParam("sid") int sid,HttpServletRequest request){
+		ResultListBean rb=new ResultListBean();
+		ManagerBean managerBean = (ManagerBean) request.getSession().getAttribute(Common.MANAGER_SESSIOIN_BEAN);
+		if (managerBean == null) {
+			rb.setErrCode(Common.ERR_CODE_NOLOGIN_MP);
+			rb.setErrMsg(Common.ERR_MSG_NOLOGIN);
+			return rb;
+		}
 	 	List<Map<String,String>> list= storeService.getStoreList(sid);
-		rlb.getList().addAll(list);
-		rlb.setCnt(list.size());
-		return rlb;
+		rb.getList().addAll(list);
+		rb.setCnt(list.size());
+		return rb;
 	}
 
 	@RequestMapping("sp/getStoreList")
 	@ResponseBody
 	public ResultListBean getStoreList(HttpServletRequest request){
-		ResultListBean rlb=new ResultListBean();
+		ResultListBean rb=new ResultListBean();
+
 		SupplerBean bean=(SupplerBean)request.getSession().getAttribute(Common.SUPPLER_SESSIOIN_BEAN);
 		if(bean==null){
-//			rlb.setErrCode(1);
-//			rlb.setErrMsg("请先登录");
-			bean=new SupplerBean();
-			bean.setId("1");
+			rb.setErrCode(Common.ERR_CODE_NOLOGIN_SP);
+			rb.setErrMsg(Common.ERR_MSG_NOLOGIN);
+			return rb;
 		}
 		List<Map<String,String>> list= storeService.getStoreList(Integer.parseInt(bean.getId()));
-		rlb.getList().addAll(list);
-		rlb.setCnt(list.size());
-		return rlb;
+		rb.getList().addAll(list);
+		rb.setCnt(list.size());
+		return rb;
 	}
 
 
 
 	@RequestMapping("mp/addStore")
 	@ResponseBody
-	public ResultBean addStore(@RequestParam StoreBean bean){
+	public ResultBean addStore(@RequestBody StoreBean bean,HttpServletRequest request){
 		ResultBean rb = new ResultBean();
+		ManagerBean managerBean = (ManagerBean) request.getSession().getAttribute(Common.MANAGER_SESSIOIN_BEAN);
+		if (managerBean == null) {
+			rb.setErrCode(Common.ERR_CODE_NOLOGIN_MP);
+			rb.setErrMsg(Common.ERR_MSG_NOLOGIN);
+			return rb;
+		}
 		if (StringUtils.isEmpty(bean.getName())) {
 			rb.setErrCode(1);
 			rb.setErrMsg("名称不能为空");

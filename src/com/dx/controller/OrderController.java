@@ -1,21 +1,17 @@
 package com.dx.controller;
 
-import com.dx.entity.ResultListBean;
-import org.apache.commons.collections4.MapUtils;
+import com.dx.common.Common;
+import com.dx.entity.*;
+import com.dx.service.OrderService;
 import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.DateTimeDateFormat;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.dx.entity.OrderBean;
-import com.dx.entity.ResultBean;
-import com.dx.service.OrderService;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,7 +31,7 @@ public class OrderController extends BaseController {
     @ResponseBody
     public ResultBean editOrder(@RequestBody OrderBean order, HttpServletRequest request) {
         logger.info("Get order info====>" + order);
-        Object openId = request.getSession().getAttribute("session_openid");
+        Object openId = request.getSession().getAttribute(Common.SESSION_OPENID);
         if (openId == null) {
             throw new RuntimeException("The openId is null and the order is ===>" + order);
         }
@@ -55,7 +51,8 @@ public class OrderController extends BaseController {
     @RequestMapping("/wx/getMyOrderList")
     @ResponseBody
     public ResultListBean getUserByOrder(HttpServletRequest request) {
-        Object openId = request.getSession().getAttribute("session_openid");
+        HttpSession session = request.getSession();
+        Object openId = session.getAttribute(Common.SESSION_OPENID);
         if (openId == null) {
             throw new RuntimeException("The openId is null ");
         }
@@ -67,21 +64,36 @@ public class OrderController extends BaseController {
     }
 
 
-//    @RequestMapping("/sp/queryOrderByPage")
-//    @ResponseBody
-//    public ResultListBean queryOrderByPage(@RequestBody OrderBean order,@RequestParam int page,@RequestParam int pageSize) {
-//        ResultListBean rst = new ResultListBean();
-//        List<Map<String, String>> list = orderService.queryOrderByPage(order,page,pageSize);
-//        rst.getList().addAll(list);
-//        rst.setCnt(list.size());
-//        return rst;
-//    }
-
-
-    @RequestMapping("/sp/queryOrderByPage")
+    @RequestMapping(value = {"/mp/queryOrderByPage"})
     @ResponseBody
-    public ResultListBean queryOrderByPage(HttpServletRequest request) {
+    public PageResultListBean queryOrderByMP(HttpServletRequest request) {
 
+        ManagerBean bean = (ManagerBean) request.getSession().getAttribute(Common.MANAGER_SESSIOIN_BEAN);
+        if (bean == null) {
+            PageResultListBean rst = new PageResultListBean();
+            rst.setErrCode(Common.ERR_CODE_NOLOGIN_MP);
+            rst.setErrMsg(Common.ERR_MSG_NOLOGIN);
+            return rst;
+        }
+        return queryOrderByPage(request);
+    }
+
+    @RequestMapping(value = {"/sp/queryOrderByPage"})
+    @ResponseBody
+    public PageResultListBean queryOrderBySP(HttpServletRequest request) {
+
+        SupplerBean bean = (SupplerBean) request.getSession().getAttribute(Common.SUPPLER_SESSIOIN_BEAN);
+        if (bean == null) {
+            PageResultListBean rst = new PageResultListBean();
+            rst.setErrCode(Common.ERR_CODE_NOLOGIN_SP);
+            rst.setErrMsg(Common.ERR_MSG_NOLOGIN);
+            return rst;
+        }
+
+        return queryOrderByPage(request);
+    }
+
+    private PageResultListBean queryOrderByPage(HttpServletRequest request) {
         Enumeration<String> paramNames = request.getParameterNames();
         Map<String, String> params = new HashMap<String, String>();
         while (paramNames.hasMoreElements()) {
@@ -89,8 +101,19 @@ public class OrderController extends BaseController {
             String pValue = request.getParameter(pName);
             params.put(pName, pValue);
         }
-        ResultListBean rst = new ResultListBean();
+        PageResultListBean rst = new PageResultListBean();
         List<Map<String, String>> list = orderService.queryOrderByPage(params);
+        int count = orderService.queryCount(params);
+        int page = 1;
+        int pageSize = 10;
+        try {
+            page = Integer.parseInt(String.valueOf(params.get("page")));
+            pageSize = Integer.parseInt(String.valueOf(params.get("pageSize")));
+        } catch (Exception e) {
+
+        }
+        rst.setCount(count);
+        rst.setPageCount(new BigDecimal((float) count / pageSize).setScale(0, BigDecimal.ROUND_UP).intValue());
         rst.getList().addAll(list);
         rst.setCnt(list.size());
         return rst;
@@ -99,9 +122,13 @@ public class OrderController extends BaseController {
 
     @RequestMapping("/wx/cancelOrder")
     @ResponseBody
-    public ResultBean updateOrderStatus(@RequestParam int orderId, @RequestParam String openId) {
+    public ResultBean updateOrderStatus(@RequestParam int orderId,HttpServletRequest request) {
+        Object openId = request.getSession().getAttribute(Common.SESSION_OPENID);
+        if (openId == null) {
+            throw new RuntimeException("The openId is null and the order is ===>" + orderId);
+        }
         ResultBean rst = new ResultBean();
-        rst.setErrCode(orderService.updateStatus(orderId, openId, 4));
+        rst.setErrCode(orderService.updateStatus(orderId, String.valueOf(openId), 4));
         return rst;
     }
 
@@ -126,8 +153,13 @@ public class OrderController extends BaseController {
 
     @RequestMapping("/sp/reviewedOrder")
     @ResponseBody
-    public ResultBean reviewedOrder(@RequestParam int orderId, @RequestParam String openId, @RequestParam int status) {
+    public ResultBean reviewedOrder(@RequestParam int orderId, @RequestParam String openId, @RequestParam int status, HttpServletRequest request) {
         ResultBean rst = new ResultBean();
+        SupplerBean bean = (SupplerBean) request.getSession().getAttribute(Common.SUPPLER_SESSIOIN_BEAN);
+        if (bean == null) {
+            rst.setErrCode(Common.ERR_CODE_NOLOGIN_SP);
+            rst.setErrMsg(Common.ERR_MSG_NOLOGIN);
+        }
         orderService.updateStatus(orderId, openId, status);
         return rst;
     }

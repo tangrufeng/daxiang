@@ -3,7 +3,6 @@ package com.dx.service.impl;
 import com.dx.dao.StoreRateDAO;
 import com.dx.entity.StoreRateBean;
 import com.dx.service.StoreRateService;
-import com.dx.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,11 +1,6 @@
 package com.dx.service;
 
-import com.dx.dao.SupplerDAO;
 import com.dx.entity.SupplerBean;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;

@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface SupplerDAO {
 
-    @Insert("INSERT INTO t_suppliers (name,status,createtime,updatetime,fullname,account,password) VALUES (#{name}, #{status}, DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),#{fullname},#{account},md5('#{password}'))")
+    @Insert("INSERT INTO t_suppliers (name,status,createtime,updatetime,fullname,account,password) VALUES (#{name}, 1, DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s'),#{fullname},#{account},md5(#{password}))")
     public int addSuppler(SupplerBean bean);
 
     @Update("update t_suppliers set name=#{name},fullname=#{fullname},account=#{account},updatetime=DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s') where id=#{id} ")
@@ -23,7 +23,7 @@ public interface SupplerDAO {
     @Update("update t_suppliers set password=md5(#{newPassword}),updatetime=DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s') where id=#{id} and password=md5(#{oldPassword})")
     public int resetPWD(@Param("id") int id,@Param("oldPassword") String oldPassword,@Param("newPassword") String newPassword);
 
-    @Select("select sp.id,sp.name,sp.status,sp.createtime,sp.fullname,sp.account,count(st.id) storeCnt from t_suppliers sp left join t_stores st on sp.id=st.s_id group by sp.id,sp.name,sp.status,sp.createtime,sp.fullname,sp.account order by id desc")
+    @Select("select sp.id,sp.name,sp.status,DATE_FORMAT(sp.createTime,'%Y-%m-%d %H:%i:%s') createTime, sp.fullname,sp.account,count(st.id) storeCnt from t_suppliers sp left join t_stores st on sp.id=st.s_id group by sp.id,sp.name,sp.status,sp.createtime,sp.fullname,sp.account order by id desc")
     public List<Map<String,String>> getSupplerList();
 
     @Select("select sp.id,sp.name,sp.status,sp.createtime,sp.fullname,sp.account from t_suppliers sp where sp.account = #{userName} and sp.password=md5(#{password})")

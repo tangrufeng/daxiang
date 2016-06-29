@@ -1,68 +1,131 @@
-<!DOCTYPE html>
-<meta charset='utf-8'>
+﻿<!DOCTYPE html>
 <html>
 <head>
-<title>Insert title here</title>
-<script type="text/javascript">
-function addOrder(){
-var postData = "{\"a\":\"aaa\",\"openId\":\"xxxxxxxx\", \"buy\":\"USD\", \"sell\":\"CNY\", \"takeDate\":\"2016-06-06\", \"cityId\":\"1\", \"areaId\":\"2\", \"sum\":\"33\", \"changer\":\"张三\", \"idType\":\"11\", \"idNo\":\"DD\", \"referenceID\":\"111\", \"moblieNo\":\"13700000000\", \"storeId\":\"1\", \"rate\":\"111\", \"status\":\"1\"}";
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui" />
+	<meta name="renderer" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			text-decoration: none;
+			font-style: normal;
+			border: 0;
+			box-sizing: border-box;
+		}
+		body{
+			font-size: 16px; 
+			color: #494949;
+		    -webkit-text-size-adjust: none;
+		    -moz-text-size-adjust: none;
+		    -ms-text-size-adjust: none;
+		    text-size-adjust: none;
+		    background-color: #f8f8f8;
+		    font-family: "微軟正黑體", 'Microsoft JhengHei';
+		    -webkit-font-smoothing: antialiased;
+		    overflow-x: hidden;
+		    overflow-y: auto;
+		}
+		img{
+			width: 100%;
+		}
+		.flex{
+			-webkit-display: flex;
+			display: flex;
+			-webkit-display: box;
+			display: box;
+		}
+		.cell{
+			-webkit-flex: 1;
+			flex: 1;
+			-webkit-box-flex: 1;
+			box-flex: 1;
+		}
+		.c_h{
+			color: #f7b800;
+		}
+		.body{
+			max-width: 960px;
+			margin: auto;
+			display: block;
+			padding: 0 130px;
+			background: #fff;
+		}
+		.logo{
+			font-size: 72px;
+			height: 120px;
+			line-height: 120px;
+		}
+		.content .img{
+			width: 400px;
+		}
+		.content .img  span{
+			height: 40px;
+			line-height: 40px;
+			display: block;
+		}
+		.dist{
+			padding: 10px 0 0 20px;
+		}
+		.dist .tip{
+			font-size: 22px;
+			padding-left: 20px;
+			height: 60px;
+			line-height: 60px;
 
-    console.log(postData);
-	var xhr = new XMLHttpRequest();
-	 
-	xhr.open("POST", "wx/editOrder.do", true);
-	xhr.setRequestHeader("Content-type","application/json; charset=utf-8");
-	xhr.onreadystatechange = function(){
-	    var XMLHttpReq = xhr;
-	    if (XMLHttpReq.readyState == 4) {
-	        if (XMLHttpReq.status == 200) {
-	            var text = XMLHttpReq.responseText;
-	 			alert(text);
-	            console.log(text);
-	        }
-	    }
-	};
-	xhr.send(postData);
-}
-</script>
+		}
+		.dist li{
+			font-weight: 600;
+			padding: 10px 0 5px 10px;
+			margin-left: 40px;
+			font-size: 17px;
+		}
+		.f_logo{
+			width: 180px;
+			display: block;
+		}
+		.company{
+			font-size: 18px;
+			height: 40px;
+			line-height: 40px;
+		}
+		.company + p{
+			line-height: 24px;
+		}
+	</style>
 </head>
-<body>
-<div style="font-size: larger;color: red">微信端接口</div>
-<a href="wx/getCities.do">获取市</a>
-<br><br>
-<a href="wx/getAreas.do">获取地理位置</a>
-<br><br>
-<a href="wx/getOrderDate.do">获取预定时间</a>
-<br><br>
-<a href="wx/getStoreList.do?buy=CNY&sell=USD&takeDate=2016-06-16&cityId=1&areaId=1">获取网点位置列表</a>
-<br><br>
-<a href="javascript:addOrder()">新增订单</a>
-<br><br>
-<a href="wx/getMyOrderList.do?openId=xxxxxxxx">获取我的订单列表</a>
-<br><br>
-<a href="wx/cancelOrder.do?openId=xxxxxxxx&orderId=1">取消订单</a>
-<br><br>
-<a href="wx/sendValiCode.do?openId=xxxx&mobileNo=xxxxx">发送短信验证码</a>
-<br><br>
-<a href="wx/valiMobile.do?openId=xxxx&mobileNo=xxxxx&valiCode=xxx">验证短信验证码</a>
-<br><br><br><br>
-<div style="font-size: larger;color: red">供应商端接口</div>
-<a href="sp/queryOrderByPage.do?openId=xxxxxxxxx&buy=CNY&sell=USD&page=1&pageSize=2">分页查询订单</a>
-<br><br>
-<a href="sp/reviewedOrder.do?openId=xxxxxxxx&orderId=1&status=2">订单审核接口。通过:status=2,拒绝:status=3</a>
-<br><br>
-<a href="sp/getStoreList.do">获取门店列表</a>
-<br><br><br><br>
-<div style="font-size: larger;color: red">后台端接口</div>
-<a href="mp/login.do?userName=test&password=aaaa">登录接口</a>
-<br><br>
-<a href="mp/resetPWD.do?id=1&oldPassword=aaaa&newPassword=bbbb">重置密码接口</a>
-<br><br>
-<a href="mp/getSupplerList.do">获取供应商列表</a>
-<br><br>
-<a href="mp/getStoreList.do?sid=1">获取门店列表</a>
-
-
-
 </body>
-</html>
+	<section class="body">
+		<h1 class="logo c_h">大象汇率</h1>
+		<div class="content flex">
+			<div class="img">
+				<img  src="1.jpg" />
+				<span>宜兰布朗咖啡</span>
+			</div>
+			<div class="dist">
+				<h4 class="tip">美且好用的货币兑换</h4>
+				<ul>
+					<li>50家兑换网点、36家渠道合作机构</li>
+					<li>覆盖一二线城市所有机场、重点交通 枢纽</li>
+					<li>没有之一，只有最佳兑换汇率</li>
+					<li>在线预约，立等可取</li>
+					<li>在线下单，锁定汇率，方便快捷</li>
+				</ul>
+			</div>
+		</div>
+		<footer>
+			<div class="flex">
+				<div class="f_logo"><img src="logo.png" alt=""></div>
+				<div class="cell">
+					<h6 class="c_h company">上海脉居信息科技有限公司 </h6>
+					<p>上海市浦东新区世纪大道201号渣打银行大厦5楼 <br/>客服热线：电话+86 21 61826879 | 客服邮箱：CS@fxswap.cn | 商务合作： Biz@fxswap.cn | 在线客服QQ：1582837075 | 微信公众号：大象汇率 版权所有© 2016 大象汇率（www.fxswap.cn）沪ICP备16022023号</p>
+				</div>
+			</div>
+		</footer>
+	</section>
+</body>
+</html> 
+
+

@@ -1,20 +1,22 @@
 package com.dx.common;
 
-import com.dx.entity.StoreRateBean;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.view.brush.DoubleStroke;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import sun.misc.BASE64Encoder;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Tom on 16/6/22.
@@ -44,13 +46,56 @@ public class ExcelTest {
             "NZD", /*新西兰元 NZD*/
     };
 
-    public static void main(String args[]){
-        int youNumber = 122;
-        // 0 代表前面补充0
-        // 4 代表长度为4
-        // d 代表参数为正数型
-        String str = String.format("%06d", youNumber);
-        System.out.println(str);
+    private final static String REG_TOUSERNAME = "<ToUserName><!\\[CDATA\\[(.*?)\\]\\]></ToUserName>";
+
+    private final static String REG_FROMUSERNAME = "<FromUserName><!\\[CDATA\\[(.*?)\\]\\]></FromUserName>";
+
+    private final static String REG_CREATETIME = "<CreateTime><!\\[CDATA\\[(.*?)\\]\\]></CreateTime>";
+
+    private final static String REG_MSGTYPE = "<MsgType><!\\[CDATA\\[(.*?)\\]\\]></MsgType>";
+
+    private final static String REG_EVENT = "<Event><!\\[CDATA\\[(.*?)\\]\\]></Event>";
+
+    private final static String REG_EVENTKEY = "<EventKey><!\\[CDATA\\[(.*?)\\]\\]></EventKey>";
+
+    private final static String REG_TICKET = "<Ticket><!\\[CDATA\\[(.*?)\\]\\]></Ticket>";
+    
+    public static String xml="<xml><ToUserName><![CDATA[gh_b4d94807c9f7]]></ToUserName>"+
+            "<FromUserName><![CDATA[oWLn9slpAibc66VvRboiOubgZTHw]]></FromUserName>"+
+            "<CreateTime>1467161225</CreateTime>"+
+            "<MsgType><![CDATA[event]]></MsgType>"+
+            "<Event><![CDATA[subscribe]]></Event>"+
+            "<EventKey><![CDATA[qrscene_ba379fd5f7bb41fc93485c22bbbdd5e4]]></EventKey>"+
+            "<Ticket><![CDATA[gQFq7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL3Qwa0d1RGJsbVhyZ095RlpsR0djAAIEKvNvVwMEAAAAAA==]]></Ticket>"+
+            "</xml>";
+    
+    public static void main(String args[]) {
+
+
+        Pattern p = Pattern.compile(REG_MSGTYPE);
+        Matcher m = p.matcher(xml);
+        if (m.find()) {
+            System.out.println(m.group(1));
+        }
+
+        p = Pattern.compile(REG_EVENT);
+        m = p.matcher(xml);
+        if (m.find()) {
+            System.out.println(m.group(1));
+        }
+
+        p = Pattern.compile(REG_FROMUSERNAME);
+        m = p.matcher(xml);
+        if (m.find()) {
+            System.out.println(m.group(1));
+        }
+        p = Pattern.compile(REG_EVENTKEY);
+        m = p.matcher(xml);
+        if (m.find()) {
+            System.out.println(m.group(1));
+        }
+        System.out.println(URLEncoder.encode("#"));
+
     }
 
 }

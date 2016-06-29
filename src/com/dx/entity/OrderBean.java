@@ -31,7 +31,7 @@ public class OrderBean implements Serializable{
 	
 	private String referenceID ="";
 	
-	private String moblieNo ="";
+	private String mobileNo ="";
 	
 	private int status=0;
 	
@@ -39,7 +39,7 @@ public class OrderBean implements Serializable{
 	
 	private String updateTime;
 	
-	private int rate=0;
+	private double rate=0;
 	
 	private int areaId=0;
 	
@@ -223,18 +223,13 @@ public class OrderBean implements Serializable{
 	}
 
 
-
-	public int getRate() {
+	public double getRate() {
 		return rate;
 	}
 
-
-
-	public void setRate(int rate) {
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
-
-
 
 	public int getAreaId() {
 		return areaId;
@@ -248,14 +243,14 @@ public class OrderBean implements Serializable{
 
 
 
-	public String getMoblieNo() {
-		return moblieNo;
+	public String getMobileNo() {
+		return mobileNo;
 	}
 
 
 
-	public void setMoblieNo(String moblieNo) {
-		this.moblieNo = moblieNo;
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
 	}
 
 
@@ -266,8 +261,8 @@ public class OrderBean implements Serializable{
 				+ ", sell=" + sell + ", takeDate=" + takeDate + ", cityId="
 				+ cityId + ", storeId=" + storeId + ", sum=" + sum
 				+ ", changer=" + changer + ", idType=" + idType + ", idNo="
-				+ idNo + ", referenceID=" + referenceID + ", moblieNo="
-				+ moblieNo + ", status=" + status + ", createTime="
+				+ idNo + ", referenceID=" + referenceID + ", mobileNo="
+				+ mobileNo + ", status=" + status + ", createTime="
 				+ createTime + ", updateTime=" + updateTime + ", rate=" + rate
 				+ ", areaId=" + areaId + "]";
 	}

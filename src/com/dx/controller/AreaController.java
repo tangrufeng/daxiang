@@ -1,17 +1,11 @@
 package com.dx.controller;
 
-import java.util.List;
-
+import com.dx.entity.ResultListBean;
+import com.dx.service.AreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.dx.entity.AreaBean;
-import com.dx.entity.ResultBean;
-import com.dx.entity.ResultListBean;
-import com.dx.service.AreaService;
 
 @Controller
 public class AreaController extends BaseController{
@@ -20,7 +14,7 @@ public class AreaController extends BaseController{
 	AreaService areaService;
 
 
-	@RequestMapping(value = "/wx/getCities.do")
+	@RequestMapping(value = "/common/getCities.do")
 	@ResponseBody
 	public ResultListBean getCities(){
 		ResultListBean bean =new ResultListBean();
@@ -29,7 +23,7 @@ public class AreaController extends BaseController{
 		return bean;
 	}
 
-	@RequestMapping(value = "/wx/getAreas.do")
+	@RequestMapping(value = "/common/getAreas.do")
 	@ResponseBody
 	public ResultListBean getAreas(){
 		ResultListBean bean =new ResultListBean();
