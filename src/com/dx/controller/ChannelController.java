@@ -7,6 +7,7 @@ import com.dx.entity.ResultBean;
 import com.dx.entity.ResultListBean;
 import com.dx.service.ChannelService;
 import com.dx.wx.QRManager;
+import com.mysql.jdbc.Blob;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,8 +15,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -78,7 +82,7 @@ public class ChannelController {
 
     @RequestMapping("/mp/getChannels")
     @ResponseBody
-    public ResultListBean getChannels(HttpServletRequest request){
+    public ResultListBean getChannels(HttpServletRequest request) throws IOException, SQLException {
         ResultListBean rlb=new ResultListBean();
         ManagerBean managerBean = (ManagerBean) request.getSession().getAttribute(Common.MANAGER_SESSIOIN_BEAN);
         if (managerBean == null) {
@@ -86,7 +90,10 @@ public class ChannelController {
             rlb.setErrMsg(Common.ERR_MSG_NOLOGIN);
             return rlb;
         }
+
+
         List<Map<String,String>> list=channelService.getChannels();
+
         rlb.getList().addAll(list);
         rlb.setCnt(list.size());
         return rlb;

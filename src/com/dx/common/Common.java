@@ -28,4 +28,31 @@ public class Common {
     public static final int ERR_CODE_NOLOGIN_SP=-98;
 
     public static final String ERR_MSG_NOLOGIN="大神,需要登录的哈";
+
+    /**
+     * 币种对应关系数组
+     */
+    public static final String[] CURRENCY = {
+            "USD", /*美元 USD*/
+            "JPY", /*日元 JPY*/
+            "AUD", /*澳大利亚元 AUD*/
+            "EUR", /*欧元 EUR*/
+            "HKD", /*港币 HKD*/
+            "AED", /*阿联酋迪拉姆 AED*/
+            "DKK", /*丹麦克朗 DKK*/
+            "CHF", /*瑞士法郎 CHF*/
+            "CAD", /*加拿大元 CAD*/
+            "BRL", /*巴西里亚尔 BRL*/
+            "GBP", /*英镑 GBP*/
+            "INR", /*印度卢比 INR*/
+            "IDR", /*印尼卢比 IDR*/
+            "ZAR", /*南非兰特 ZAR*/
+            "TWD", /*新台币 TWD*/
+            "THB", /*泰国铢 THB*/
+            "SGD", /*新加坡元 SGD*/
+            "SEK", /*瑞典克朗 SEK*/
+            "RUB", /*卢布 RUB*/
+            "PHP", /*菲律宾比索 PHP*/
+            "NZD", /*新西兰元 NZD*/
+    };
 }

@@ -3,6 +3,7 @@ package com.dx.controller;
 import com.dx.common.Common;
 import com.dx.entity.*;
 import com.dx.service.StoreService;
+import com.dx.utils.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -98,6 +99,22 @@ public class StoreController extends BaseController{
 			return rb;
 		}
 
+
+		if(StringUtils.isEmpty(bean.getMin())){
+			bean.setMin(null);
+		}else if(NumberUtils.isInteger(bean.getMin())){
+			rb.setErrCode(1);
+			rb.setErrMsg("最小金额限制只能为数字");
+			return rb;
+		}
+
+		if(StringUtils.isEmpty(bean.getMax())){
+			bean.setMax(null);
+		}else if(NumberUtils.isInteger(bean.getMax())){
+			rb.setErrCode(1);
+			rb.setErrMsg("最大金额限制只能为数字");
+			return rb;
+		}
 		int i = storeService.addStore(bean);
 		return rb;
 	}

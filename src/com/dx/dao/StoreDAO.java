@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface StoreDAO {
 
-	@Select("select  LPAD(s.id,5,0) as id, s.s_id, s.name, s.address,"
+	@Select("select DISTINCT LPAD(s.id,5,0) as id, s.s_id, s.name, s.address,"
 			+ "s.opentime, s.max, s.min, sr.rate, s.opentime,"
 			+ "sp.name as spname, sp.fullname,s.ahead,dc.name as city  from  t_stores s,"
 			+ "t_store_rate sr, dict_city dc, t_suppliers sp"

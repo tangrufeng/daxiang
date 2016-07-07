@@ -41,30 +41,6 @@ public class RateController {
     @Autowired
     StoreRateService storeRateService;
 
-    private static final String[] CURRENCY = {
-            "USD", /*美元 USD*/
-            "JPY", /*日元 JPY*/
-            "AUD", /*澳大利亚元 AUD*/
-            "EUR", /*欧元 EUR*/
-            "HKD", /*港币 HKD*/
-            "AED", /*阿联酋迪拉姆 AED*/
-            "DKK", /*丹麦克朗 DKK*/
-            "CHF", /*瑞士法郎 CHF*/
-            "CAD", /*加拿大元 CAD*/
-            "BRL", /*巴西里亚尔 BRL*/
-            "GBP", /*英镑 GBP*/
-            "INR", /*印度卢比 INR*/
-            "IDR", /*印尼卢比 IDR*/
-            "ZAR", /*南非兰特 ZAR*/
-            "TWD", /*新台币 TWD*/
-            "THB", /*泰国铢 THB*/
-            "SGD", /*新加坡元 SGD*/
-            "SEK", /*瑞典克朗 SEK*/
-            "RUB", /*卢布 RUB*/
-            "PHP", /*菲律宾比索 PHP*/
-            "NZD", /*新西兰元 NZD*/
-    };
-
 
     @RequestMapping("/sp/downloadTemplat")
     public void downloadTemplat(HttpServletRequest request, HttpServletResponse response) {
@@ -103,7 +79,7 @@ public class RateController {
                     cell.setCellType(Cell.CELL_TYPE_STRING);
 
 
-                    for (int a = 0; a < CURRENCY.length; a++) {
+                    for (int a = 0; a < Common.CURRENCY.length; a++) {
                         cell=row.createCell((a * 2) + 2);
                         cell.setCellStyle(style);
                         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
@@ -196,7 +172,7 @@ public class RateController {
                     return rb;
                 }
 
-                for (int i = 0; i < CURRENCY.length; i++) {
+                for (int i = 0; i < Common.CURRENCY.length; i++) {
                     String strRate=getCellValue(row1.getCell((i * 2) + 2));
                     double rate = Double.parseDouble(StringUtils.isEmpty(strRate)?"0":strRate);
                     if (rate != 0.0) {
@@ -204,7 +180,7 @@ public class RateController {
                         rateBean.setsId(storeId);
                         rateBean.setsName(storeName);
                         rateBean.setBuy("CNY");
-                        rateBean.setSell(CURRENCY[i]);
+                        rateBean.setSell(Common.CURRENCY[i]);
                         rateBean.setRate(String.valueOf(new BigDecimal(rate).setScale(4, BigDecimal.ROUND_DOWN)));
                         rateBean.setSupplierId(String.valueOf(bean.getId()));
                         rates.add(rateBean);
@@ -216,7 +192,7 @@ public class RateController {
                         StoreRateBean rateBean = new StoreRateBean();
                         rateBean.setsId(storeId);
                         rateBean.setsName(storeName);
-                        rateBean.setBuy(CURRENCY[i]);
+                        rateBean.setBuy(Common.CURRENCY[i]);
                         rateBean.setSell("CNY");
                         rateBean.setRate(String.valueOf(new BigDecimal(rate).setScale(4, BigDecimal.ROUND_DOWN)));
                         rateBean.setSupplierId(String.valueOf(bean.getId()));

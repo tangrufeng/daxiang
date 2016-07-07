@@ -1,9 +1,9 @@
 package com.dx.wx;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.util.IOUtils;
 import com.dx.common.Common;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,16 +13,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.impl.common.IOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Created by Tom on 16/6/24.
@@ -40,6 +37,8 @@ public class QRManager {
     private final static String SHOWQRCODE_URL = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=";
 
     private final static String POST_JSON = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"#SCENE_STR#\"}}}";
+
+    private Object locked=new Object();
 
     public String getQR(String uuid) {
 
@@ -64,11 +63,19 @@ public class QRManager {
                             HttpResponse respQR = client.execute(get);
                             HttpEntity httpEntity = respQR.getEntity();
                             if (httpEntity != null) {
-                                InputStream inputStream = httpEntity.getContent();
-                                byte[] bytes = new byte[(int) httpEntity.getContentLength()];
-                                inputStream.read(bytes);
-                                inputStream.close();
-                                return Base64.encodeBase64String(bytes);
+                                synchronized (locked) {
+                                    InputStream inputStream = httpEntity.getContent();
+                                    String fileName = String.valueOf(System.currentTimeMillis());
+                                    FileOutputStream fos=new FileOutputStream(fileName+".png");
+                                    IOUtils.copy(inputStream,fos);
+                                    fos.flush();
+                                    fos.close();
+                                    FileInputStream fis=new FileInputStream(fileName+".png");
+                                    byte[] bytes = new byte[fis.available()];
+                                    fis.read(bytes);
+                                    inputStream.close();
+                                    return Base64.encodeBase64String(bytes);
+                                }
                             }
                         }
                     }

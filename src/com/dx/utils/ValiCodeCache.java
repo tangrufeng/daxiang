@@ -37,7 +37,7 @@ public class ValiCodeCache {
             return 1;
         }
 
-        String value=cache.remove(phone);
+        String value=cache.get(phone);
         if(StringUtils.isEmpty(value)){
             return 1;
         }
@@ -45,10 +45,12 @@ public class ValiCodeCache {
         String[] strArr=value.split("_");
 
         if(System.currentTimeMillis()-Long.parseLong(strArr[1])>TIMEOUT){
+            cache.remove(phone);
             return 2;
         }
 
         if(valiCode.equals(strArr[0])){
+            cache.remove(phone);
             return 0;
         }else{
             return 1;

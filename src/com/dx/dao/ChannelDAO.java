@@ -1,10 +1,7 @@
 package com.dx.dao;
 
 import com.dx.entity.ChannelBean;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import java.util.List;
@@ -19,6 +16,15 @@ public interface ChannelDAO {
     public int addChannel(ChannelBean bean);
 
     @Select("select id,name,linkman,phone,qrimage,status,DATE_FORMAT(createTime,'%Y-%m-%d %H:%i:%s') createTime, DATE_FORMAT(updateTime,'%Y-%m-%d %H:%i:%s') updateTime,sId from t_channels")
+    @Results({ @Result(id = true, column = "id", property = "id"),
+            @Result(column = "name", property = "name"),
+            @Result(column = "linkman", property = "linkman"),
+            @Result(column = "phone", property = "phone"),
+            @Result(column = "qrimage", property = "qrimage",typeHandler = com.dx.utils.BlobTypeHandler.class),
+            @Result(column = "status", property = "status"),
+            @Result(column = "createTime", property = "createtime"),
+            @Result(column = "updateTime", property = "updatetime"),
+            @Result(column = "sId", property = "sId")})
     public List<Map<String,String>> getChannels();
 
     @Update("update t_channels set QRImage=#{image} where QRCode=#{code}")

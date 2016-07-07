@@ -75,7 +75,7 @@ public class OrderController extends BaseController {
             rst.setErrMsg(Common.ERR_MSG_NOLOGIN);
             return rst;
         }
-        return queryOrderByPage(request);
+        return queryOrderByPage(request,null);
     }
 
     @RequestMapping(value = {"/sp/queryOrderByPage"})
@@ -90,16 +90,19 @@ public class OrderController extends BaseController {
             return rst;
         }
 
-        return queryOrderByPage(request);
+        return queryOrderByPage(request,bean.getId());
     }
 
-    private PageResultListBean queryOrderByPage(HttpServletRequest request) {
+    private PageResultListBean queryOrderByPage(HttpServletRequest request,String spId) {
         Enumeration<String> paramNames = request.getParameterNames();
         Map<String, String> params = new HashMap<String, String>();
         while (paramNames.hasMoreElements()) {
             String pName = paramNames.nextElement();
             String pValue = request.getParameter(pName);
             params.put(pName, pValue);
+        }
+        if(!StringUtils.isEmpty(spId)){
+            params.put("supplierId",spId);
         }
         PageResultListBean rst = new PageResultListBean();
         List<Map<String, String>> list = orderService.queryOrderByPage(params);
@@ -139,10 +142,10 @@ public class OrderController extends BaseController {
         ResultListBean rst = new ResultListBean();
         List<String> list = new ArrayList<String>();
         Date date = new Date();
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 14; i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.DAY_OF_MONTH, i);
+            calendar.add(Calendar.DAY_OF_MONTH, i+1);
             list.add(sdf.format(calendar.getTime()));
         }
         rst.getList().addAll(list);
