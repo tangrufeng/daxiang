@@ -4,6 +4,7 @@ import com.dx.common.Common;
 import com.dx.entity.*;
 import com.dx.service.StoreService;
 import com.dx.utils.NumberUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -18,6 +19,8 @@ import java.util.Map;
 
 @Controller
 public class StoreController extends BaseController{
+
+	private final static Logger logger=Logger.getLogger(StoreController.class);
 
 	@Autowired
 	StoreService storeService;
@@ -74,6 +77,7 @@ public class StoreController extends BaseController{
 	@RequestMapping("mp/addStore")
 	@ResponseBody
 	public ResultBean addStore(@RequestBody StoreBean bean,HttpServletRequest request){
+		logger.info(bean);
 		ResultBean rb = new ResultBean();
 		ManagerBean managerBean = (ManagerBean) request.getSession().getAttribute(Common.MANAGER_SESSIOIN_BEAN);
 		if (managerBean == null) {
@@ -102,7 +106,7 @@ public class StoreController extends BaseController{
 
 		if(StringUtils.isEmpty(bean.getMin())){
 			bean.setMin(null);
-		}else if(NumberUtils.isInteger(bean.getMin())){
+		}else if(!NumberUtils.isInteger(bean.getMin())){
 			rb.setErrCode(1);
 			rb.setErrMsg("最小金额限制只能为数字");
 			return rb;
@@ -110,9 +114,16 @@ public class StoreController extends BaseController{
 
 		if(StringUtils.isEmpty(bean.getMax())){
 			bean.setMax(null);
-		}else if(NumberUtils.isInteger(bean.getMax())){
+		}else if(!NumberUtils.isInteger(bean.getMax())){
 			rb.setErrCode(1);
 			rb.setErrMsg("最大金额限制只能为数字");
+			return rb;
+		}
+		if(StringUtils.isEmpty(bean.getAhead())){
+			bean.setMax(null);
+		}else if(!NumberUtils.isInteger(bean.getAhead())){
+			rb.setErrCode(1);
+			rb.setErrMsg("最大提前预约天数只能为数字");
 			return rb;
 		}
 		int i = storeService.addStore(bean);

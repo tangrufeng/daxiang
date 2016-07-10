@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class SupplerController {
     @ResponseBody
     public ResultBean addSuppler(@RequestBody SupplerBean bean,HttpServletRequest request) {
         ResultBean rb = new ResultBean();
+
         ManagerBean managerBean = (ManagerBean) request.getSession().getAttribute(Common.MANAGER_SESSIOIN_BEAN);
         if (managerBean == null) {
             rb.setErrCode(Common.ERR_CODE_NOLOGIN_MP);

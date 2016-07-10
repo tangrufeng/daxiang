@@ -56,7 +56,8 @@ public class RateController {
             return;
         }
 
-        String templatFilePath = this.getClass().getClassLoader().getResource("/").getPath() + "config" + File.separator + "templat.xlsx";
+        String templatFilePath = this.getClass().getClassLoader().getResource(
+                "/").getPath() + "config" + File.separator + "templat.xlsx";
         logger.debug("templatFilePath=====>" + templatFilePath);
         File templatFile = new File(templatFilePath);
         if (templatFile.exists()) {
@@ -64,7 +65,7 @@ public class RateController {
                 FileInputStream fis = new FileInputStream(templatFile);
                 XSSFWorkbook excel = new XSSFWorkbook(fis);
                 XSSFSheet sheet = excel.getSheet("网点及汇率报价");
-                XSSFCellStyle style=sheet.getRow(0).getCell(0).getCellStyle();
+                XSSFCellStyle style = sheet.getRow(0).getCell(0).getCellStyle();
                 for (int i = 0; i < stores.size(); i++) {
                     Map<String, String> store = stores.get(i);
                     XSSFRow row = sheet.createRow(i + 1);
@@ -80,11 +81,11 @@ public class RateController {
 
 
                     for (int a = 0; a < Common.CURRENCY.length; a++) {
-                        cell=row.createCell((a * 2) + 2);
+                        cell = row.createCell((a * 2) + 2);
                         cell.setCellStyle(style);
                         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
 
-                        cell=row.createCell((a * 2) + 3);
+                        cell = row.createCell((a * 2) + 3);
                         cell.setCellStyle(style);
                         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
                     }
@@ -97,7 +98,7 @@ public class RateController {
                 if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
                     fileName = java.net.URLEncoder.encode(fileName, "UTF-8");
                 } else {
-                //非IE浏览器的处理：
+                    //非IE浏览器的处理：
                     fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
                 }
                 response.reset();
@@ -130,23 +131,23 @@ public class RateController {
             rb.setErrMsg("上传失败");
             return rb;
         }
-        System.out.println("content-type====>" + upload.getFileItem().getContentType());
+        logger.info("content-type====>" + upload.getFileItem().getContentType());
 
 
-            XSSFWorkbook excel =null;
+        XSSFWorkbook excel = null;
 
         try {
-            excel=new XSSFWorkbook(upload.getInputStream());
-        }catch (Exception e){
-            logger.error("上传文件名称===>"+upload.getOriginalFilename()+ "  ====>"+upload.getContentType(),e);
+            excel = new XSSFWorkbook(upload.getInputStream());
+        } catch (Exception e) {
+            logger.error("上传文件名称===>" + upload.getOriginalFilename() + "  ====>" + upload.getContentType(), e);
         }
-        if(excel==null){
+        if (excel == null) {
             rb.setErrCode(1);
             rb.setErrMsg("大神,别啥都上传好不好,我要Excel,麻烦来点诚意!");
             return rb;
         }
 
-        try{
+        try {
             XSSFSheet sheet = excel.getSheet("网点及汇率报价");
             if (sheet == null) {
                 sheet = excel.getSheetAt(1);
@@ -163,7 +164,7 @@ public class RateController {
 
                 String storeId = getCellValue(row1.getCell(0));
                 String storeName = getCellValue(row1.getCell(1));
-                if(StringUtils.isEmpty(storeId) || StringUtils.isEmpty(storeName)){
+                if (StringUtils.isEmpty(storeId) || StringUtils.isEmpty(storeName)) {
                     continue;
                 }
                 if (storeService.isExistStore(storeId, storeName, bean.getId()) == 0) {
@@ -173,8 +174,8 @@ public class RateController {
                 }
 
                 for (int i = 0; i < Common.CURRENCY.length; i++) {
-                    String strRate=getCellValue(row1.getCell((i * 2) + 2));
-                    double rate = Double.parseDouble(StringUtils.isEmpty(strRate)?"0":strRate);
+                    String strRate = getCellValue(row1.getCell((i * 2) + 2));
+                    double rate = Double.parseDouble(StringUtils.isEmpty(strRate) ? "0" : strRate);
                     if (rate != 0.0) {
                         StoreRateBean rateBean = new StoreRateBean();
                         rateBean.setsId(storeId);
@@ -186,8 +187,8 @@ public class RateController {
                         rates.add(rateBean);
                     }
 
-                    strRate=getCellValue(row1.getCell((i * 2) + 3));
-                    rate = Double.parseDouble(StringUtils.isEmpty(strRate)?"0":strRate);
+                    strRate = getCellValue(row1.getCell((i * 2) + 3));
+                    rate = Double.parseDouble(StringUtils.isEmpty(strRate) ? "0" : strRate);
                     if (rate != 0.0) {
                         StoreRateBean rateBean = new StoreRateBean();
                         rateBean.setsId(storeId);
@@ -200,7 +201,7 @@ public class RateController {
                     }
                 }
             }
-            if(rates.size()==0){
+            if (rates.size() == 0) {
                 rb.setErrCode(1);
                 rb.setErrMsg("大神,你上传了个空的东东,来点诚意好不好");
                 return rb;
@@ -223,8 +224,8 @@ public class RateController {
     }
 
 
-    private String getCellValue(XSSFCell cell){
-        switch (cell.getCellType()){
+    private String getCellValue(XSSFCell cell) {
+        switch (cell.getCellType()) {
             case XSSFCell.CELL_TYPE_NUMERIC:
                 return String.valueOf(cell.getNumericCellValue());
             default:

@@ -1,0 +1,27 @@
+<xml>
+    <ToUserName><![CDATA[#{toUser}]]></ToUserName>
+    <FromUserName><![CDATA[#{fromUser}]]></FromUserName>
+    <CreateTime>#{createTime}</CreateTime>
+    <MsgType><![CDATA[news]]></MsgType>
+    <ArticleCount>3</ArticleCount>
+    <Articles>
+        <item>
+            <Title><![CDATA[美且好用的货币兑换预约平台]]></Title>
+            <Description><![CDATA[美且好用的货币兑换预约平台描述]]></Description>
+            <PicUrl><![CDATA[www.fxswap.cn/wx_img/640.jpg]]></PicUrl>
+            <Url><![CDATA[url]]></Url>
+        </item>
+        <item>
+            <Title><![CDATA[感谢您关注大象汇率外币兑换预约平台]]></Title>
+            <Description><![CDATA[感谢您关注大象汇率外币兑换预约平台描述]]></Description>
+            <PicUrl><![CDATA[www.fxswap.cn/wx_img/1.jpg]]></PicUrl>
+            <Url><![CDATA[]]></Url>
+        </item>
+        <item>
+            <Title><![CDATA[教您如何用大象汇率 ->]]></Title>
+            <Description><![CDATA[description]]></Description>
+            <PicUrl><![CDATA[www.fxswap.cn/wx_img/0.png]]></PicUrl>
+            <Url><![CDATA[]]></Url>
+        </item>
+    </Articles>
+</xml>
