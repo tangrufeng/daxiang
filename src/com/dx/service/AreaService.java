@@ -10,5 +10,6 @@ public interface AreaService {
 	List<AreaBean> getCities();
 
 	List<AreaBean> getAreas();
-	
+
+	List<AreaBean> getUsefullCities();
 }

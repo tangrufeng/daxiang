@@ -25,4 +25,8 @@ public class AreaServiceImpl implements AreaService {
 		return areaDao.getAreas();
 	}
 
+	@Override
+	public List<AreaBean> getUsefullCities() {
+		return areaDao.getUsefullCities();
+	}
 }

@@ -3,6 +3,7 @@ package com.dx.controller;
 import com.dx.common.Common;
 import com.dx.entity.*;
 import com.dx.service.OrderService;
+import com.dx.utils.SMSUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,6 +25,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    SMSUtils smsUtils;
 
     @RequestMapping(
             value = "/wx/editOrder.do",
@@ -50,14 +55,16 @@ public class OrderController extends BaseController {
 
     @RequestMapping("/wx/getMyOrderList")
     @ResponseBody
-    public ResultListBean getUserByOrder(HttpServletRequest request) {
+    public ResultListBean getUserByOrder(@RequestParam(value = "key",required = false) String key, HttpServletRequest
+            request) {
         HttpSession session = request.getSession();
         Object openId = session.getAttribute(Common.SESSION_OPENID);
         if (openId == null) {
             throw new RuntimeException("The openId is null ");
         }
         ResultListBean rst = new ResultListBean();
-        List<Map<String, String>> list = orderService.getOrderByUser(String.valueOf(openId));
+        List<Map<String, String>> list = orderService.getOrderByUser(String.valueOf(openId), URLDecoder.decode
+                (key==null?"":key));
         rst.getList().addAll(list);
         rst.setCnt(list.size());
         return rst;
@@ -75,7 +82,7 @@ public class OrderController extends BaseController {
             rst.setErrMsg(Common.ERR_MSG_NOLOGIN);
             return rst;
         }
-        return queryOrderByPage(request,null);
+        return queryOrderByPage(request, null);
     }
 
     @RequestMapping(value = {"/sp/queryOrderByPage"})
@@ -90,10 +97,10 @@ public class OrderController extends BaseController {
             return rst;
         }
 
-        return queryOrderByPage(request,bean.getId());
+        return queryOrderByPage(request, bean.getId());
     }
 
-    private PageResultListBean queryOrderByPage(HttpServletRequest request,String spId) {
+    private PageResultListBean queryOrderByPage(HttpServletRequest request, String spId) {
         Enumeration<String> paramNames = request.getParameterNames();
         Map<String, String> params = new HashMap<String, String>();
         while (paramNames.hasMoreElements()) {
@@ -101,8 +108,8 @@ public class OrderController extends BaseController {
             String pValue = request.getParameter(pName);
             params.put(pName, pValue);
         }
-        if(!StringUtils.isEmpty(spId)){
-            params.put("supplierId",spId);
+        if (!StringUtils.isEmpty(spId)) {
+            params.put("supplierId", spId);
         }
         PageResultListBean rst = new PageResultListBean();
         List<Map<String, String>> list = orderService.queryOrderByPage(params);
@@ -125,7 +132,7 @@ public class OrderController extends BaseController {
 
     @RequestMapping("/wx/cancelOrder")
     @ResponseBody
-    public ResultBean updateOrderStatus(@RequestParam int orderId,HttpServletRequest request) {
+    public ResultBean updateOrderStatus(@RequestParam int orderId, HttpServletRequest request) {
         Object openId = request.getSession().getAttribute(Common.SESSION_OPENID);
         if (openId == null) {
             throw new RuntimeException("The openId is null and the order is ===>" + orderId);
@@ -145,7 +152,7 @@ public class OrderController extends BaseController {
         for (int i = 1; i < 60; i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.DAY_OF_MONTH, i+1);
+            calendar.add(Calendar.DAY_OF_MONTH, i + 1);
             list.add(sdf.format(calendar.getTime()));
         }
         rst.getList().addAll(list);
@@ -156,14 +163,24 @@ public class OrderController extends BaseController {
 
     @RequestMapping("/sp/reviewedOrder")
     @ResponseBody
-    public ResultBean reviewedOrder(@RequestParam int orderId, @RequestParam String openId, @RequestParam int status, HttpServletRequest request) {
+    public ResultBean reviewedOrder(@RequestParam int orderId, @RequestParam String openId, @RequestParam int status,
+                                    HttpServletRequest request) {
         ResultBean rst = new ResultBean();
         SupplerBean bean = (SupplerBean) request.getSession().getAttribute(Common.SUPPLER_SESSIOIN_BEAN);
         if (bean == null) {
             rst.setErrCode(Common.ERR_CODE_NOLOGIN_SP);
             rst.setErrMsg(Common.ERR_MSG_NOLOGIN);
         }
-        orderService.updateStatus(orderId, openId, status);
+        int i = orderService.updateStatus(orderId, openId, status);
+        if (i > 0 && status == 2) {   //审核通过发送短信
+            Map<String, Object> map = orderService.getOrderById(orderId + "");
+
+            String content = Common.SMS_CONTENT_PASS.replace("#地址#", String
+                    .valueOf(map.get("address")));
+            content = content.replace("#兑换日期#",
+                    String.valueOf(map.get("takeDate")) + "(" + map.get("opentime") + ")");
+            smsUtils.sendSMS(String.valueOf(map.get("mobileNo")), content);
+        }
         return rst;
     }
 

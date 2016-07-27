@@ -19,9 +19,21 @@ public interface OrderDAO {
 
 	@Select("SELECT  o.id, o.buy, o.sell,o.rate, o.takeDate, o.cityId, o.sum, o.changer, o.idType, o.idNo, o.referenceID, o.mobileNo, o.status orderStatus, s.name, s.id storeId, s.max, s.min, s.address, s.opentime,a.name as area,c.name as city,DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') createTime " +
 			"FROM t_order o, t_stores s, t_areas a, dict_city c " +
-			"WHERE o.storeId = s.id and s.city=c.id and s.area=a.id and openId=#{openId} order by createtime desc")
-	List<Map<String,String>> getOrderByUser(String openId);
+			"WHERE o.storeId = s.id and s.city=c.id and s.area=a.id and openId=#{openId} order by  createtime desc")
+	List<Map<String,String>> getOrderByUser(@Param("openId") String openId);
 
+
+	@Select("SELECT  o.id, o.buy, o.sell,o.rate, o.takeDate, o.cityId, o.sum, o.changer, o.idType, o.idNo, o.referenceID, o.mobileNo, o.status orderStatus, s.name, s.id storeId, s.max, s.min, s.address, s.opentime,a.name as area,c.name as city,DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') createTime " +
+			"FROM t_order o, t_stores s, t_areas a, dict_city c " +
+			"WHERE o.storeId = s.id and s.city=c.id and s.area=a.id and openId=#{openId} and (o.mobileNo like  CONCAT" +
+			"('%',#{key},'%' ) or o.changer like  CONCAT ('%',#{key},'%' ))  order by  createtime desc")
+	List<Map<String,String>> getOrderByUserSearch(@Param("openId") String openId,@Param("key") String key);
+
+
+	@Select("SELECT  o.id, o.buy, o.sell,o.rate, o.takeDate, o.cityId, o.sum, o.changer, o.idType, o.idNo, o.referenceID, o.mobileNo, o.status orderStatus, s.name, s.id storeId, s.max, s.min, s.address, s.opentime,a.name as area,c.name as city,DATE_FORMAT(o.createTime,'%Y-%m-%d %H:%i:%s') createTime " +
+			"FROM t_order o, t_stores s, t_areas a, dict_city c " +
+			"WHERE o.storeId = s.id and s.city=c.id and s.area=a.id and o.id=#{id}")
+	Map<String,Object> getOrderById(String id);
 
 	@Update("update t_order set status=#{status} where id=#{orderId} and openId=#{openId}")
 	int updateStatus(@Param("orderId") int orderId,@Param("openId") String openId,@Param("status") int status);
@@ -33,7 +45,17 @@ public interface OrderDAO {
 	@SelectProvider(type=OrderSQL.class,method = "queryCount")
 	int queryCount(Map<String,String> map);
 
+	@Select("select 1 from t_order where mobileNo=#{mobileNo} limit 1")
+	String isExistMobileNo(String mobileNo);
+
 	public class OrderSQL {
+
+		public String queryByOpenId(final Map params){
+			SQL sql=new SQL(){
+
+			};
+			return sql.toString();
+		}
 
 		public String queryByPage(final Map params){
 			SQL sql = getSql(params);

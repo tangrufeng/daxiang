@@ -14,6 +14,15 @@ public class AreaController extends BaseController{
 	AreaService areaService;
 
 
+	@RequestMapping(value = "/common/getUsefullCities.do")
+	@ResponseBody
+	public ResultListBean getUsefullCities(){
+		ResultListBean bean =new ResultListBean();
+		bean.getList().addAll(areaService.getUsefullCities());
+		bean.setCnt(bean.getList().size());
+		return bean;
+	}
+
 	@RequestMapping(value = "/common/getCities.do")
 	@ResponseBody
 	public ResultListBean getCities(){

@@ -23,6 +23,8 @@ public class Common {
 
     public static final String SMS_CONTENT_VALICODE="【大象汇率】校验码#CODE# 120秒内有效 回T退订";
 
+    public static final String SMS_CONTENT_PASS="【大象汇率】您的兑换订单已经审核通过，地址：#地址#，日期：#兑换日期# 回T退订";
+
     public static final int ERR_CODE_NOLOGIN_MP = -99;
 
     public static final int ERR_CODE_NOLOGIN_SP=-98;

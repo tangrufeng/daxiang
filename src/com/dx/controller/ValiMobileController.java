@@ -2,10 +2,12 @@ package com.dx.controller;
 
 import com.dx.common.Common;
 import com.dx.entity.ResultBean;
+import com.dx.service.OrderService;
 import com.dx.utils.SMSUtils;
 import com.dx.utils.ValiCodeCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +25,28 @@ public class ValiMobileController extends BaseController{
 
     @Autowired
     SMSUtils smsUtils;
+
+    @Autowired
+    OrderService orderService;
+
+    @RequestMapping("/wx/isExistMobile")
+    @ResponseBody
+    public ResultBean isExistMobile(@RequestParam("mobileNo") String mobileNo,HttpServletRequest request){
+        ResultBean rst =new ResultBean();
+        if(request.getSession().getAttribute(Common.SESSION_OPENID)!=null) {
+            String isExist=orderService.isExistMobileNo(mobileNo);
+            if(StringUtils.isEmpty(isExist)){
+                rst.setIsExist("0");
+            }else{
+                rst.setIsExist("1");
+            }
+        }else{
+            rst.setErrCode(1);
+            rst.setErrMsg("请先关注【大象汇率】公众号");
+        }
+
+        return rst;
+    }
 
     @RequestMapping("/wx/sendValiCode")
     @ResponseBody

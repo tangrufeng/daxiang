@@ -6,7 +6,8 @@ public class ResultBean {
 	int errCode=0;
 	
 	String errMsg="";
-	
+
+	String isExist="";
 
 	public int getErrCode() {
 		return errCode;
@@ -22,6 +23,14 @@ public class ResultBean {
 
 	public void setErrMsg(String errMsg) {
 		this.errMsg = errMsg;
+	}
+
+	public String getIsExist() {
+		return isExist;
+	}
+
+	public void setIsExist(String isExist) {
+		this.isExist = isExist;
 	}
 
 	@Override

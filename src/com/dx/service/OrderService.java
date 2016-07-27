@@ -13,9 +13,13 @@ public interface OrderService {
 
 	int updateStatus(int orderId,String openId,int status);
 
-	List<Map<String,String>> getOrderByUser(String openId);
+	List<Map<String,String>> getOrderByUser(String openId,String key);
 
 	List<Map<String,String>> queryOrderByPage(Map<String,String> params);
 
 	int queryCount(Map<String,String> params);
+
+	Map<String,Object> getOrderById(String id);
+
+	String isExistMobileNo(String mobileNo);
 }

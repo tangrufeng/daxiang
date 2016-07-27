@@ -15,7 +15,7 @@ public interface StoreDAO {
 			+ " where  s.city = #{city} and s.area = #{area}  and sr.buy = #{buy} "
 			+ "and sr.sell = #{sell}  and s.ahead >= datediff(#{takeDate}, "
 			+ "date_format(now(), '%Y-%m-%d')) and dc.id = s.city "
-			+ "and sp.id = s.s_id;")
+			+ "and sp.id = s.s_id and sr.s_id=s.id;")
 	@Results({ @Result(id = true, column = "id", property = "id"),
 			@Result(column = "name", property = "name"),
 			@Result(column = "spname", property = "supplier"),
